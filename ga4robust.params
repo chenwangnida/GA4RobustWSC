@@ -2,6 +2,8 @@ parent.0		=  simple.params
 
 pop.subpop.0.size = 30
 generations       = 200
+robustNum	      = 1000
+lsNum             = 10
 
 seed.0                                         = 1
 composition-task                               = problem.xml

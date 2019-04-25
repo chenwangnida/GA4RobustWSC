@@ -38,7 +38,7 @@ import ec.simple.SimpleInitializer;
 import ec.util.Parameter;
 import wsc.InitialWSCPool;
 import wsc.data.pool.Service;
-import wsc.distribution.TruncatedNormal;
+import wsc.dynamic.distribution.TruncatedNormal;
 import wsc.graph.ServiceInput;
 import wsc.graph.ServiceOutput;
 import wsc.graph.WSCEvaluation;
@@ -57,14 +57,15 @@ public class WSCInitializer extends SimpleInitializer {
 	public static final int RELIABILITY = 3;
 
 	// Fitness function weights
-	public static double w1 = 0.25;
-	public static double w2 = 0.25;
-	public static double w3 = 0.125;
-	public static double w4 = 0.125;
-	public static double w5 = 0.125;
-	public static double w6 = 0.125;
+	public static double w1;
+	public static double w2;
+	public static double w3;
+	public static double w4;
+	public static double w5;
+	public static double w6;
 	public static double exact = 1.00;
 	public static double plugin = 0.75;
+	
 
 	public static double MINIMUM_COST = Double.MAX_VALUE;
 	public static double MINIMUM_TIME = Double.MAX_VALUE;
@@ -80,10 +81,6 @@ public class WSCInitializer extends SimpleInitializer {
 	public static double MAXINUM_MATCHTYPE = 1;
 	public static double MAXINUM_SEMANTICDISTANCE = 1;
 
-	public static final double BRONZE = 0.25;
-	public static final double SILVER = 0.50;
-	public static final double GOLD = 0.75;
-	public static final double PLATINUM = 1.0;
 
 	// data
 	public static WSCRandom random;
@@ -110,6 +107,11 @@ public class WSCInitializer extends SimpleInitializer {
 	public static final double sd_failure_probability = 0.1732;
 	public static final double lb = 0.0;
 	public static final double ub = 1;
+	
+	public static int robustNum;
+	public static int lsNum;
+
+	
 
 	@Override
 	public void setup(EvolutionState state, Parameter base) {
@@ -132,6 +134,9 @@ public class WSCInitializer extends SimpleInitializer {
 		Parameter weight4Param = new Parameter("fitness-weight4");
 		Parameter weight5Param = new Parameter("fitness-weight5");
 		Parameter weight6Param = new Parameter("fitness-weight6");
+		Parameter robustNumParam = new Parameter("robustNum");
+		Parameter lsNumParam = new Parameter("lsNum");
+
 
 		String serviceFileName = state.parameters.getStringWithDefault(servicesParam, null, null);
 		String taskFileName = state.parameters.getStringWithDefault(taskParam, null, null);
@@ -143,6 +148,8 @@ public class WSCInitializer extends SimpleInitializer {
 		w4 = state.parameters.getDouble(weight4Param, null);
 		w5 = state.parameters.getDouble(weight5Param, null);
 		w6 = state.parameters.getDouble(weight6Param, null);
+		robustNum = state.parameters.getInt(robustNumParam, null);
+		lsNum = state.parameters.getInt(lsNumParam, null);
 
 		try {
 			// register task

@@ -77,11 +77,6 @@ public class WSCEvaluation {
 
  		double fitness = ((WSCInitializer.w1 * mt) + (WSCInitializer.w2 * dst) + (WSCInitializer.w3 * a)
 				+ (WSCInitializer.w4 * r) + (WSCInitializer.w5 * t) + (WSCInitializer.w6 * c));
- 		
- 		
- 		// calculate the semantic matchmaking quality for constrains checking
-		double fitness_semantic = 0.5 * mt + 0.5 * dst;
-		individual.setFitness_semantic(fitness_semantic);
 
 		return fitness;
 	}

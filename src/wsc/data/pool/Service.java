@@ -37,7 +37,7 @@ public class Service implements Comparable<Service> {
 
 	// run-time attributes
 	private double failure_probability;
-	private boolean status;
+	private int status = 2; // 0 is unavailable; 1 is available; 2 is default 
 
 	public Service(String serviceID, double[] qos, List<ServiceInput> inputList, List<ServiceOutput> arrayList) {
 		super();
@@ -95,11 +95,12 @@ public class Service implements Comparable<Service> {
 		this.failure_probability = failure_probability;
 	}
 
-	public boolean isStatus() {
+
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 

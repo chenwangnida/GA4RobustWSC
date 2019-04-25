@@ -18,7 +18,7 @@ import org.jgrapht.DirectedGraph;
 import wsc.data.pool.SWSPool;
 import wsc.data.pool.SemanticsPool;
 import wsc.data.pool.Service;
-import wsc.distribution.TruncatedNormal;
+import wsc.dynamic.distribution.TruncatedNormal;
 import wsc.ecj.ga.WSCInitializer;
 import wsc.graph.ParamterConn;
 import wsc.graph.ServiceEdge;

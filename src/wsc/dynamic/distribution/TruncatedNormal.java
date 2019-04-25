@@ -1,4 +1,4 @@
-package wsc.distribution;
+package wsc.dynamic.distribution;
 
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
 import org.apache.commons.math3.exception.OutOfRangeException;

@@ -11,9 +11,10 @@ import ec.util.Parameter;
 import ec.vector.VectorIndividual;
 import wsc.InitialWSCPool;
 import wsc.data.pool.Service;
+import wsc.dynamic.localsearch.LocalSearch;
 import wsc.graph.ServiceGraph;
 
-public class SequenceVectorIndividual extends VectorIndividual {
+public class SequenceVectorIndividual extends VectorIndividual{
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,8 +26,13 @@ public class SequenceVectorIndividual extends VectorIndividual {
 	private double semanticDistance;
 
 	private String strRepresentation; // a string of graph-based representation
+	private double fitness_value = 0.0; // The higher, the fitterSSSS
 
-	private double fitness_semantic; // MT+SIM with range (0,1]
+	public Service[] genome;
+	public List<Service> relevantList;
+	private int splitPosition;
+	public List<Integer> serQueue = new ArrayList<Integer>(); // service Index arraylist
+	
 
 	public double getAvailability() {
 		return availability;
@@ -84,16 +90,23 @@ public class SequenceVectorIndividual extends VectorIndividual {
 		this.strRepresentation = strRepresentation;
 	}
 
-	public double getFitness_semantic() {
-		return fitness_semantic;
+	public int getSplitPosition() {
+		return splitPosition;
 	}
 
-	public void setFitness_semantic(double fitness_semantic) {
-		this.fitness_semantic = fitness_semantic;
+	public void setSplitPosition(int splitPosition) {
+		this.splitPosition = splitPosition;
+	}
+	
+	
+
+	public double getFitness_value() {
+		return fitness_value;
 	}
 
-	public Service[] genome;
-	public List<Service> relevantList;
+	public void setFitness_value(double fitness_value) {
+		this.fitness_value = fitness_value;
+	}
 
 	@Override
 	public Parameter defaultBase() {
@@ -155,9 +168,9 @@ public class SequenceVectorIndividual extends VectorIndividual {
 	// return graph.toString();
 	// }
 
-	public void calculateSequenceFitness(Service[] sequence, WSCInitializer init, EvolutionState state) {
+	public double calculateSequenceFitness(Service[] sequence, WSCInitializer init, EvolutionState state) {
 		// generate DAG corresponding to vector
-		
+
 		InitialWSCPool.getServiceCandidates().clear();
 
 		relevantList = new ArrayList<Service>();
@@ -174,12 +187,65 @@ public class SequenceVectorIndividual extends VectorIndividual {
 
 		// evaluation
 		init.eval.aggregationAttribute(this, graph);
-		double f = init.eval.calculateFitness(this);
+		this.fitness_value = init.eval.calculateFitness(this);
+
+		return this.fitness_value;
 
 		// set fitness to individual
-		((SimpleFitness) fitness).setFitness(state, f, false); // XXX Move this inside the other one
-		this.evaluated = true;
+//		((SimpleFitness) fitness).setFitness(state, f, false); // XXX Move this inside the other one
+//		this.evaluated = true;
 
+	}
+
+	public double calculateSequenceFitness4Disturbance(Service[] sequence, WSCInitializer init, EvolutionState state) {
+		// generate DAG corresponding to vector
+
+		InitialWSCPool.getServiceCandidates().clear();
+
+		relevantList = new ArrayList<Service>();
+		List<Integer> fullSerQueue = new ArrayList<Integer>();
+
+		for (Service s : sequence) {
+			// check the status based on the failure probability
+			double dice = init.random.nextDouble();
+			if (dice >= s.getFailure_probability()) {
+				relevantList.add(s);
+				fullSerQueue.add(s.serviceIndex);
+			}
+		}
+
+		// starting individual based on the given sequence of services
+		SequenceVectorIndividual indi_start = new SequenceVectorIndividual();
+
+		// set the service candidates according to the status
+		InitialWSCPool.setServiceCandidates(relevantList);
+
+		List<Integer> usedSerQueue = new ArrayList<Integer>();
+
+		ServiceGraph update_graph = init.graGenerator.generateGraphBySerQueue();
+		// adjust the bias according to the valid solution from the service queue
+
+		// create a queue of services according to breathfirstsearch algorithm
+		List<Integer> usedQueue = init.graGenerator.usedQueueofLayers("startNode", update_graph, usedSerQueue);
+		// set up the split index for the updated individual
+		indi_start.setSplitPosition(usedQueue.size());
+
+		// add unused queue to form a complete a vector-based individual
+		List<Integer> serQueue = init.graGenerator.completeSerQueueIndi(usedQueue, fullSerQueue);
+
+		// set the serQueue to the updatedIndividual
+		indi_start.serQueue = serQueue;
+
+		// evaluate updated updated_graph
+		// eval.aggregationAttribute(indi_updated, updated_graph);
+		indi_start.setStrRepresentation(update_graph.toString());
+		init.eval.aggregationAttribute(indi_start, update_graph);
+		indi_start.fitness_value = init.eval.calculateFitness(indi_start);
+
+		LocalSearch ls = new LocalSearch();
+	    SequenceVectorIndividual indi_fixed = ls.randomSwapOnefromLayers(indi_start, init, state);
+
+		return indi_fixed.getFitness_value();
 	}
 
 }

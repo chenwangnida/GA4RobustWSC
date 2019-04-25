@@ -1,4 +1,4 @@
-package wsc.distribution;
+package wsc.dynamic.distribution;
 
 /*
  * Originally from 
