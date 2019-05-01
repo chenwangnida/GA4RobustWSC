@@ -26,9 +26,11 @@ public class WSCProblem extends Problem implements SimpleProblemForm {
 		// evaluations 4 robustness
 		double f_ind2_robust = calculateRustnessFitness(ind2, init, state);
 
+		double f = 0.5 * f_ind2 + 0.5 * f_ind2_robust;
+
 		// Set up fitness values
-//		((SimpleFitness) fitness).setFitness(state, f, false); // XXX Move this inside the other one
-//		this.evaluated = true;
+		((SimpleFitness) ind2.fitness).setFitness(state, f, false); // XXX Move this inside the other one
+		ind2.evaluated = true;
 
 	}
 
@@ -38,10 +40,14 @@ public class WSCProblem extends Problem implements SimpleProblemForm {
 		for (int i = 0; i < init.robustNum; i++) {
 			// simulate an disturbance
 			double f_ind2 = ind2.calculateSequenceFitness4Disturbance(ind2.genome, init, state);
+			//set fitness value for part2
+			ind2.setFitness_value2(f_ind2);
 			f_sum += f_ind2;
 		}
 
-		return f_sum / 31;
+		double part2 = 1 - Math.abs(f_sum / init.robustNum - ind2.getFitness_value()) / ind2.getFitness_value();
+
+		return part2;
 
 	}
 

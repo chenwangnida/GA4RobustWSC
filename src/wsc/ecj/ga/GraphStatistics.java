@@ -4,6 +4,7 @@ import ec.EvolutionState;
 import ec.Individual;
 import ec.simple.SimpleShortStatistics;
 import ec.util.Parameter;
+import wsc.data.pool.Service;
 
 /**
  *
@@ -14,7 +15,7 @@ public class GraphStatistics extends SimpleShortStatistics {
 	private static final long serialVersionUID = 1L;
 	public int histogramLog = 0; // 0 by default means stdout
 
-    @Override
+	@Override
     public void postEvaluationStatistics(EvolutionState state){
         boolean output = (state.generation % modulus == 0);
 
@@ -153,6 +154,10 @@ public class GraphStatistics extends SimpleShortStatistics {
             state.output.print("" + popMeanFitness + " " , statisticslog);                                                                                  // mean fitness of pop this gen
             state.output.print("" + (popBestOfGeneration.fitness.fitness()) + " " , statisticslog);                 // best fitness of pop this gen
             state.output.print("" + (popBestSoFar.fitness.fitness()) + " " , statisticslog);                // best fitness of pop so far
+            state.output.print("" + ((SequenceVectorIndividual)popBestSoFar).getFitness_value() + " " , statisticslog);                // best fitness part1 of pop so far
+            state.output.print("" + ((SequenceVectorIndividual)popBestSoFar).getFitness_value2() + " " , statisticslog);                // best fitness part2 of pop so far
+
+            
             }
 
         // hook for KozaShortStatistics etc.
@@ -166,6 +171,16 @@ public class GraphStatistics extends SimpleShortStatistics {
             // Print the best candidate at the end of the run
             if (state.generation == state.parameters.getInt(new Parameter("generations"), null)-1) {
                 state.output.println(popBestSoFar.toString(), statisticslog);
+                state.output.println("" + " " , statisticslog);               
+                for(Service s: ((SequenceVectorIndividual)popBestSoFar).genome) {
+                    state.output.print("" + s.serviceID+ " " , statisticslog);                 	
+                }
+                state.output.println("" + " " , statisticslog);               
+                for(Service s: ((SequenceVectorIndividual)popBestSoFar).genome) {
+                    state.output.print("" + s.serviceIndex+ " " , statisticslog);                 	
+                }
+
+
             }
         }
     }

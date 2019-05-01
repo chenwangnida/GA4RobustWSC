@@ -208,11 +208,6 @@ public class WSCGraph {
 				usedQueue.add(serId);
 			}
 		}
-		if (usedQueue.size() != WSCInitializer.initialWSCPool.getServiceSequence().size()) {
-
-			System.err.println("the size of individual is not correcct");
-			return null;
-		}
 
 		return usedQueue;
 	}
