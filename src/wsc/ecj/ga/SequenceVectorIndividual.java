@@ -213,7 +213,7 @@ public class SequenceVectorIndividual extends VectorIndividual {
 
 		for (Service s : sequence) {
 			// check the status based on the failure probability
-			double dice = init.random.nextDouble();
+			double dice = init.random_disturbace.nextDouble();
 			if (dice >= s.getFailure_probability()) {
 				relevantList.add(s);
 				fullSerQueue.add(s.serviceIndex);

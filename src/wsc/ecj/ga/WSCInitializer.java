@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.BiMap;
@@ -84,6 +85,7 @@ public class WSCInitializer extends SimpleInitializer {
 
 	// data
 	public static WSCRandom random;
+	public static Random random_disturbace;
 	public static List<String> taskInput;
 	public static List<String> taskOutput;
 	public static InitialWSCPool initialWSCPool;
@@ -119,7 +121,11 @@ public class WSCInitializer extends SimpleInitializer {
 
 		random = new WSCRandom(state.random[0]);
 		super.setup(state, base);
-
+		
+		
+		
+		
+		//random seed for failure probability
 		RandomGenerator r = new MersenneTwister();
 		r.setSeed(0);
 		TruncatedNormal nd = new TruncatedNormal(r, mean_failure_probability, sd_failure_probability, lb, ub);
@@ -136,6 +142,7 @@ public class WSCInitializer extends SimpleInitializer {
 		Parameter weight6Param = new Parameter("fitness-weight6");
 		Parameter robustNumParam = new Parameter("robustNum");
 		Parameter lsNumParam = new Parameter("lsNum");
+		Parameter seedNum = new Parameter("seed.0");
 
 
 		String serviceFileName = state.parameters.getStringWithDefault(servicesParam, null, null);
@@ -150,6 +157,12 @@ public class WSCInitializer extends SimpleInitializer {
 		w6 = state.parameters.getDouble(weight6Param, null);
 		robustNum = state.parameters.getInt(robustNumParam, null);
 		lsNum = state.parameters.getInt(lsNumParam, null);
+		int seed = state.parameters.getInt(seedNum, null);
+		
+		
+		random_disturbace = new Random(seed);
+
+
 
 		try {
 			// register task
