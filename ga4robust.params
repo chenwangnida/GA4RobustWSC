@@ -5,7 +5,7 @@ generations       = 200
 robustNum	      = 50
 lsNum             = 10
 
-seed.0                                         = 3
+seed.0                                         = 0
 composition-task                               = problem.xml
 composition-taxonomy                           = taxonomy.owl
 composition-services                           = services-output.xml
