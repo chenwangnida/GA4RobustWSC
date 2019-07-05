@@ -233,7 +233,7 @@ public class SequenceVectorIndividual extends VectorIndividual {
 
 		if (!update_graph.containsVertex("startNode")) {
 
-			System.out.println("No solution could be found!");
+//			System.out.println("No solution could be found!");
 			// under this case, we set fitness values as 0
 			return 0;
 		} else {

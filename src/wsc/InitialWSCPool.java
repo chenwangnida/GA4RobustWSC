@@ -484,7 +484,7 @@ public class InitialWSCPool {
 			Service service = swsPool.createGraphService(graphOutputs, serviceCandidates, this.semanticsPool,
 					directedGraph, graphOutputListMap);
 			if (service == null) {
-				System.err.println("No service is usable now");
+//				System.err.println("No service is usable now");
 				return;
 			}
 			// add found service to a vector based representation

@@ -24,12 +24,23 @@ public class WSCProblem extends Problem implements SimpleProblemForm {
 		double f_ind2 = ind2.calculateSequenceFitness(ind2.genome, init, state);
 
 		// evaluations 4 robustness
-		double f = calculateRustnessFitness(ind2, init, state);
 
-//		double f = 0.75 * f_ind2 + 0.25 * f_ind2_robust;
+		// test re-calculateRobust 10 times
+
+//		for (int i = 0; i < 10; i++) {
+
+		double f = calculateRustnessFitness(ind2, init, state);
+//			System.out.println(i +": "+ f);
 
 		// Set up fitness values
 		((SimpleFitness) ind2.fitness).setFitness(state, f, false); // XXX Move this inside the other one
+
+//		}
+
+//		double f = 0.75 * f_ind2 + 0.25 * f_ind2_robust;
+
+//		System.out.println("#########################");
+
 		ind2.evaluated = true;
 
 	}
